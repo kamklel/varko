@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  image        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  listings Listing[] @relation("HostListings")
+  bookings Booking[] @relation("RenterBookings")
+}
+
+model Listing {
+  id     String @id @default(cuid())
+  hostId String
+  host   User   @relation("HostListings", fields: [hostId], references: [id], onDelete: Cascade)
+
+  title             String
+  description       String
+  address           String
+  city              String?
+  pincode           String?
+  lat               Float
+  lng               Float
+  capacity          Int
+  pricePerHourCents Int
+
+  // "ACTIVE" | "INACTIVE" -- plain String because SQLite has no native enum type in Prisma.
+  // Closed set enforced via the ListingStatus union type in src/lib/types.ts.
+  status String @default("ACTIVE")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos   ListingPhoto[]
+  bookings Booking[]
+
+  @@index([lat, lng])
+}
+
+model ListingPhoto {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  renterId  String
+  renter    User     @relation("RenterBookings", fields: [renterId], references: [id], onDelete: Cascade)
+
+  startTime DateTime
+  endTime   DateTime
+  numSpots  Int      @default(1)
+
+  // Price breakdown snapshotted at booking time -- changing pricing constants later
+  // never rewrites historical bookings.
+  hourlyRateCentsSnapshot Int
+  basePriceCents          Int
+  renterServiceFeeCents   Int
+  totalPriceCents         Int
+  hostCommissionCents     Int
+  hostPayoutCents         Int
+
+  // "PENDING" | "PAID" | "FAILED" | "REFUNDED" -- plain String (see note on Listing.status).
+  // v1 flips PENDING -> PAID synchronously (no real processor yet); paymentProviderRef
+  // stays null until a real processor is wired in later.
+  paymentStatus      String  @default("PENDING")
+  paymentProviderRef String?
+
+  // "CONFIRMED" | "CANCELLED" -- plain String (see note on Listing.status).
+  bookingStatus String @default("CONFIRMED")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([listingId, startTime, endTime])
+  @@index([renterId])
+}

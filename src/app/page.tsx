@@ -1,65 +1,203 @@
-import Image from "next/image";
+import Link from "next/link";
+import { FaqAccordion } from "@/components/FaqAccordion";
+
+const BENEFITS = [
+  {
+    title: "Book by the hour",
+    body: "Only pay for the time you actually need, from a couple of hours to all day.",
+  },
+  {
+    title: "Fair, local pricing",
+    body: "Prices are guided by what similar spots nearby charge, so no one gets overcharged.",
+  },
+  {
+    title: "Any space works",
+    body: "A driveway, a field, an empty lot — if it fits a car, it can earn.",
+  },
+  {
+    title: "No back-and-forth",
+    body: "See what's available, pick a time, and book instantly — no calls or messaging required.",
+  },
+];
+
+const FAQ = [
+  {
+    q: "How is the price decided?",
+    a: "Hosts set their own price. We show them what similar spots nearby charge and cap prices so they stay reasonable for the area.",
+  },
+  {
+    q: "Can a listing fit more than one car?",
+    a: "Yes. Hosts set a capacity when they list a space, and renters can book more than one spot at a time if they need to.",
+  },
+  {
+    q: "What if my plans change?",
+    a: "You can cancel any upcoming booking before it starts from your bookings page.",
+  },
+  {
+    q: "Do I need to create an account to look around?",
+    a: "You can search and browse listings without an account. You'll need one to book a spot or list your own.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-1 flex-col">
+      <section className="flex min-h-[75vh] items-center border-b border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
+          <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl dark:text-neutral-100">
+            Park anywhere.
+            <br />
+            Host anywhere.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mx-auto mt-6 max-w-xl text-lg text-neutral-600 dark:text-neutral-400">
+            Find a safe place to park nearby, or turn your empty driveway,
+            field, or lot into extra income.
           </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/search"
+              className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 sm:w-auto"
+            >
+              Find parking
+            </Link>
+            <Link
+              href="/host/listings/new"
+              className="w-full rounded-lg border border-blue-600 bg-white px-6 py-3 text-sm font-medium text-blue-600 hover:bg-blue-50 sm:w-auto dark:bg-transparent dark:hover:bg-blue-950"
+            >
+              List your space
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:py-16">
+        <h2 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+          How it works
+        </h2>
+        <div className="mt-10 grid gap-8 sm:grid-cols-3">
+          <div className="text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              1
+            </div>
+            <h3 className="mt-4 font-medium text-neutral-900 dark:text-neutral-100">
+              Host lists a space
+            </h3>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              List a driveway, field, or empty lot. Set how many cars it fits
+              and a price — guided by what similar spots nearby charge.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              2
+            </div>
+            <h3 className="mt-4 font-medium text-neutral-900 dark:text-neutral-100">
+              Renter finds &amp; books
+            </h3>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              Search for parking near you, pick a time window, and book
+              instantly.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+              3
+            </div>
+            <h3 className="mt-4 font-medium text-neutral-900 dark:text-neutral-100">
+              Everybody wins
+            </h3>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              Renters get somewhere safe to park, and hosts earn from space
+              they weren&apos;t using anyway.
+            </p>
+          </div>
         </div>
-      </main>
+      </section>
+
+      <section className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="mx-auto w-full max-w-5xl px-4 py-14 sm:py-16">
+          <h2 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+            Why Varko
+          </h2>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {BENEFITS.map((b) => (
+              <div
+                key={b.title}
+                className="rounded-lg border border-neutral-200 border-t-4 border-t-blue-600 bg-white p-5 dark:border-neutral-800 dark:border-t-blue-500 dark:bg-neutral-950"
+              >
+                <h3 className="font-medium text-neutral-900 dark:text-neutral-100">{b.title}</h3>
+                <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">{b.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:py-16">
+        <div className="grid gap-6 sm:grid-cols-2 sm:gap-10">
+          <div className="rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
+            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+              Looking for parking?
+            </h3>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              New in the area or just don&apos;t want to circle the block?
+              Search nearby, pick a time window, and book a spot in minutes.
+            </p>
+            <Link
+              href="/search"
+              className="mt-4 inline-block text-sm font-medium text-blue-600 underline dark:text-blue-400"
+            >
+              Find parking
+            </Link>
+          </div>
+          <div className="rounded-lg border border-neutral-200 p-6 dark:border-neutral-800">
+            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+              Have space to spare?
+            </h3>
+            <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+              A driveway, a field, an empty lot — list it, set a capacity and
+              a price, and start earning from space you weren&apos;t using.
+            </p>
+            <Link
+              href="/host/listings/new"
+              className="mt-4 inline-block text-sm font-medium text-blue-600 underline dark:text-blue-400"
+            >
+              List your space
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="mx-auto w-full max-w-3xl px-4 py-14 sm:py-16">
+          <h2 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+            Common questions
+          </h2>
+          <div className="mt-8">
+            <FaqAccordion items={FAQ} />
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-5xl px-4 py-14 text-center sm:py-16">
+        <h2 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+          Ready to get started?
+        </h2>
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/search"
+            className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 sm:w-auto"
+          >
+            Find parking
+          </Link>
+          <Link
+            href="/host/listings/new"
+            className="w-full rounded-lg border border-blue-600 bg-white px-6 py-3 text-sm font-medium text-blue-600 hover:bg-blue-50 sm:w-auto dark:bg-transparent dark:hover:bg-blue-950"
+          >
+            List your space
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
