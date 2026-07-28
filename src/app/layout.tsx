@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   verification: {
-    google: "WZ76mW1JUMGHSuVszQ632zcTh-t-Af36HiV8GVpbFnA",
+    google: "m54y-u_kR7JUG3L-i397intCe0FiHvc80pgzlVJfGis",
   },
   keywords: [
     "Varko",
