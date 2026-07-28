@@ -1,9 +1,55 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { formatCents } from "@/lib/pricing";
 import { MapView } from "@/components/MapView";
 import { BookingWidget } from "@/components/BookingWidget";
+import { SITE_URL } from "@/lib/site";
+
+const getListing = cache(async (id: string) => {
+  return prisma.listing.findUnique({
+    where: { id },
+    include: {
+      host: { select: { name: true } },
+      photos: { orderBy: { order: "asc" } },
+    },
+  });
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const listing = await getListing(id);
+  if (!listing) return {};
+
+  const location = [listing.city, listing.pincode].filter(Boolean).join(" ");
+  const title = `${listing.title}${location ? ` — Parking in ${location}` : ""}`;
+  const description = listing.description.slice(0, 155);
+  const image = listing.photos[0]?.url;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/listings/${id}` },
+    openGraph: {
+      title,
+      description,
+      url: `${SITE_URL}/listings/${id}`,
+      images: image ? [{ url: image }] : undefined,
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image] : undefined,
+    },
+  };
+}
 
 export default async function ListingDetailPage({
   params,
@@ -12,23 +58,34 @@ export default async function ListingDetailPage({
 }) {
   const { id } = await params;
 
-  const [listing, session] = await Promise.all([
-    prisma.listing.findUnique({
-      where: { id },
-      include: {
-        host: { select: { name: true } },
-        photos: { orderBy: { order: "asc" } },
-      },
-    }),
-    auth(),
-  ]);
+  const [listing, session] = await Promise.all([getListing(id), auth()]);
 
   if (!listing) {
     notFound();
   }
 
+  const listingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: listing.title,
+    description: listing.description,
+    image: listing.photos.map((p) => p.url),
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "INR",
+      price: (listing.pricePerHourCents / 100).toFixed(2),
+      availability: listing.status === "ACTIVE" ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      url: `${SITE_URL}/listings/${listing.id}`,
+    },
+  };
+
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(listingJsonLd) }}
+      />
+
       {listing.status === "INACTIVE" && (
         <div className="mb-4 rounded-lg bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-300">
           This listing is currently inactive and not bookable.

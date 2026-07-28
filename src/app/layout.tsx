@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Header } from "@/components/Header";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,9 +15,68 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Varko — Park anywhere, host anywhere",
-  description:
-    "Find parking near you or rent out your spare driveway or land by the hour.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Varko — Park anywhere, host anywhere",
+    template: "%s | Varko",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    "Varko",
+    "parking",
+    "rent parking spot",
+    "parking marketplace",
+    "driveway rental",
+    "hourly parking",
+    "parking near me India",
+    "list your driveway",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: "Varko — Park anywhere, host anywhere",
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Varko — Park anywhere, host anywhere",
+    description: SITE_DESCRIPTION,
+  },
+};
+
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/apple-icon`,
+  description: SITE_DESCRIPTION,
+};
+
+const WEBSITE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${SITE_URL}/search?location={search_term_string}`,
+    "query-input": "required name=search_term_string",
+  },
 };
 
 const THEME_INIT_SCRIPT = `
@@ -42,6 +102,14 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSON_LD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
+        />
       </head>
       <body className="flex min-h-full flex-col bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
         <Header />
