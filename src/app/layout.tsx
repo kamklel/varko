@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
+  verification: {
+    google: "WZ76mW1JUMGHSuVszQ632zcTh-t-Af36HiV8GVpbFnA",
+  },
   keywords: [
     "Varko",
     "parking",

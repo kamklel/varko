@@ -119,7 +119,7 @@ export function ScrollHeroSequence() {
 
           <div
             ref={spotRef}
-            className="absolute right-[10%] top-1/2 h-16 w-11 -translate-y-1/2 rounded-md border-2 border-dashed border-blue-500 opacity-0 sm:h-24 sm:w-16"
+            className="absolute right-[10%] top-1/2 h-20 w-36 -translate-y-1/2 rounded-md border-2 border-dashed border-blue-500 opacity-0 sm:h-24 sm:w-44"
           />
 
           <div ref={carRef} className="absolute left-0 top-1/2 will-change-transform">
