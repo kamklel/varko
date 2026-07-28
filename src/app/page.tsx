@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { ScrollCarTrack } from "@/components/ScrollCarTrack";
 
 const BENEFITS = [
   {
@@ -41,7 +42,7 @@ const FAQ = [
 
 export default function Home() {
   return (
-    <div className="flex flex-1 flex-col">
+    <ScrollCarTrack>
       <section className="flex min-h-[75vh] items-center border-b border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
         <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
           <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl dark:text-neutral-100">
@@ -198,6 +199,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-    </div>
+    </ScrollCarTrack>
   );
 }
