@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FaqAccordion } from "@/components/FaqAccordion";
-import { CarParkingIllustration } from "@/components/CarParkingIllustration";
+import { ScrollHeroSequence } from "@/components/ScrollHeroSequence";
 
 const BENEFITS = [
   {
@@ -43,37 +43,7 @@ const FAQ = [
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <section className="flex min-h-[75vh] items-center border-b border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
-        <div className="mx-auto grid w-full max-w-5xl gap-10 px-4 py-16 sm:py-20 lg:grid-cols-2 lg:items-center lg:gap-6">
-          <div className="text-center lg:text-left">
-            <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-6xl lg:text-6xl dark:text-neutral-100">
-              Park anywhere.
-              <br />
-              Host anywhere.
-            </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-neutral-600 lg:mx-0 dark:text-neutral-400">
-              Find a safe place to park nearby, or turn your empty driveway,
-              field, or lot into extra income.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
-              <Link
-                href="/search"
-                className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 sm:w-auto"
-              >
-                Find parking
-              </Link>
-              <Link
-                href="/host/listings/new"
-                className="w-full rounded-lg border border-blue-600 bg-white px-6 py-3 text-sm font-medium text-blue-600 hover:bg-blue-50 sm:w-auto dark:bg-transparent dark:hover:bg-blue-950"
-              >
-                List your space
-              </Link>
-            </div>
-          </div>
-
-          <CarParkingIllustration />
-        </div>
-      </section>
+      <ScrollHeroSequence />
 
       <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:py-16">
         <h2 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
