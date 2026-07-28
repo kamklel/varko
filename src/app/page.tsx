@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FaqAccordion } from "@/components/FaqAccordion";
-import { ScrollCarTrack } from "@/components/ScrollCarTrack";
+import { ScrollHeroSequence } from "@/components/ScrollHeroSequence";
 
 const BENEFITS = [
   {
@@ -42,34 +42,8 @@ const FAQ = [
 
 export default function Home() {
   return (
-    <ScrollCarTrack>
-      <section className="flex min-h-[75vh] items-center border-b border-neutral-200 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900">
-        <div className="mx-auto max-w-5xl px-4 py-16 text-center sm:py-20">
-          <h1 className="text-4xl font-bold tracking-tight text-neutral-900 sm:text-6xl lg:text-7xl dark:text-neutral-100">
-            Park anywhere.
-            <br />
-            Host anywhere.
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-neutral-600 dark:text-neutral-400">
-            Find a safe place to park nearby, or turn your empty driveway,
-            field, or lot into extra income.
-          </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/search"
-              className="w-full rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 sm:w-auto"
-            >
-              Find parking
-            </Link>
-            <Link
-              href="/host/listings/new"
-              className="w-full rounded-lg border border-blue-600 bg-white px-6 py-3 text-sm font-medium text-blue-600 hover:bg-blue-50 sm:w-auto dark:bg-transparent dark:hover:bg-blue-950"
-            >
-              List your space
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="flex flex-1 flex-col">
+      <ScrollHeroSequence />
 
       <section className="mx-auto w-full max-w-5xl px-4 py-14 sm:py-16">
         <h2 className="text-center text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
@@ -199,6 +173,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-    </ScrollCarTrack>
+    </div>
   );
 }
