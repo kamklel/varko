@@ -32,6 +32,9 @@ export function HeaderClient({
               <Link href="/bookings" className={linkClass}>
                 My bookings
               </Link>
+              <Link href="/favorites" className={linkClass}>
+                Saved
+              </Link>
               <span className="text-neutral-300 dark:text-neutral-700">|</span>
               <span className="text-neutral-500 dark:text-neutral-400">{userName}</span>
               <form action={logout}>
@@ -111,6 +114,9 @@ export function HeaderClient({
                 </Link>
                 <Link href="/bookings" className={linkClass} onClick={() => setMenuOpen(false)}>
                   My bookings
+                </Link>
+                <Link href="/favorites" className={linkClass} onClick={() => setMenuOpen(false)}>
+                  Saved
                 </Link>
                 <div className="border-t border-neutral-200/60 pt-3 dark:border-neutral-800/60">
                   <p className="text-neutral-500 dark:text-neutral-400">{userName}</p>

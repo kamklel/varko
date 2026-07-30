@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatCents } from "@/lib/pricing";
 import { cancelBookingAction } from "./actions";
+import { ReviewForm } from "@/components/ReviewForm";
 
 export default async function MyBookingsPage({
   searchParams,
@@ -17,7 +18,10 @@ export default async function MyBookingsPage({
 
   const bookings = await prisma.booking.findMany({
     where: { renterId: session.user.id },
-    include: { listing: { select: { id: true, title: true, address: true } } },
+    include: {
+      listing: { select: { id: true, title: true, address: true } },
+      review: true,
+    },
     orderBy: { startTime: "desc" },
   });
 
@@ -85,21 +89,51 @@ export default async function MyBookingsPage({
                           : "Upcoming"}
                     </span>
                   </p>
+
+                  {b.bookingStatus === "CONFIRMED" && isPast && (
+                    <>
+                      {b.review ? (
+                        <div className="mt-2 text-sm">
+                          <span className="text-amber-400">
+                            {"★".repeat(b.review.rating)}
+                            <span className="text-neutral-300 dark:text-neutral-700">
+                              {"★".repeat(5 - b.review.rating)}
+                            </span>
+                          </span>
+                          {b.review.comment && (
+                            <p className="mt-0.5 text-neutral-600 dark:text-neutral-400">
+                              {b.review.comment}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <ReviewForm bookingId={b.id} />
+                      )}
+                    </>
+                  )}
                 </div>
                 <div className="shrink-0 sm:text-right">
                   <p className="font-medium text-neutral-900 dark:text-neutral-100">
                     {formatCents(b.totalPriceCents)}
                   </p>
-                  {cancellable && (
-                    <form action={cancelBookingAction.bind(null, b.id)}>
-                      <button
-                        type="submit"
-                        className="mt-2 text-sm text-red-600 underline hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                      >
-                        Cancel
-                      </button>
-                    </form>
-                  )}
+                  <div className="mt-2 flex flex-col gap-2 sm:items-end">
+                    <Link
+                      href={`/messages/${b.id}`}
+                      className="text-sm text-blue-600 underline hover:text-blue-700 dark:text-blue-400"
+                    >
+                      Message host
+                    </Link>
+                    {cancellable && (
+                      <form action={cancelBookingAction.bind(null, b.id)}>
+                        <button
+                          type="submit"
+                          className="text-sm text-red-600 underline hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                    )}
+                  </div>
                 </div>
               </li>
             );

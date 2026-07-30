@@ -26,3 +26,36 @@ export async function cancelBookingAction(bookingId: string) {
   revalidatePath("/bookings");
   revalidatePath("/host/bookings");
 }
+
+export async function submitReviewAction(bookingId: string, rating: number, comment: string) {
+  const session = await auth();
+  if (!session?.user) throw new Error("Not authenticated");
+
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+    throw new Error("Rating must be between 1 and 5");
+  }
+
+  const booking = await prisma.booking.findUnique({ where: { id: bookingId } });
+  if (!booking || booking.renterId !== session.user.id) {
+    throw new Error("Booking not found");
+  }
+  if (booking.bookingStatus !== "CONFIRMED") {
+    throw new Error("Can't review a cancelled booking");
+  }
+  if (booking.endTime.getTime() > Date.now()) {
+    throw new Error("Booking hasn't finished yet");
+  }
+
+  await prisma.review.create({
+    data: {
+      bookingId,
+      listingId: booking.listingId,
+      renterId: session.user.id,
+      rating,
+      comment: comment.trim() || null,
+    },
+  });
+
+  revalidatePath("/bookings");
+  revalidatePath(`/listings/${booking.listingId}`);
+}

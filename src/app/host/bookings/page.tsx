@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -64,6 +65,12 @@ export default async function HostBookingsPage() {
                 <p className="font-medium text-neutral-900 dark:text-neutral-100">
                   Payout {formatCents(b.hostPayoutCents)}
                 </p>
+                <Link
+                  href={`/messages/${b.id}`}
+                  className="mt-2 inline-block text-blue-600 underline hover:text-blue-700 dark:text-blue-400"
+                >
+                  Message renter
+                </Link>
               </div>
             </li>
           ))}

@@ -22,12 +22,20 @@ export default async function HostListingsPage() {
           <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
             Your listings
           </h1>
-          <Link
-            href="/host/bookings"
-            className="text-sm text-blue-600 underline hover:text-blue-700 dark:text-blue-400"
-          >
-            View bookings received
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/host/bookings"
+              className="text-sm text-blue-600 underline hover:text-blue-700 dark:text-blue-400"
+            >
+              View bookings received
+            </Link>
+            <Link
+              href="/host/earnings"
+              className="text-sm text-blue-600 underline hover:text-blue-700 dark:text-blue-400"
+            >
+              View earnings
+            </Link>
+          </div>
         </div>
         <Link
           href="/host/listings/new"

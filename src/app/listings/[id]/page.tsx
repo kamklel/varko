@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { formatCents } from "@/lib/pricing";
 import { MapView } from "@/components/MapView";
 import { BookingWidget } from "@/components/BookingWidget";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { SITE_URL } from "@/lib/site";
 
 const getListing = cache(async (id: string) => {
@@ -14,6 +15,10 @@ const getListing = cache(async (id: string) => {
     include: {
       host: { select: { name: true } },
       photos: { orderBy: { order: "asc" } },
+      reviews: {
+        orderBy: { createdAt: "desc" },
+        include: { renter: { select: { name: true } } },
+      },
     },
   });
 });
@@ -64,12 +69,35 @@ export default async function ListingDetailPage({
     notFound();
   }
 
+  const isFavorited = session?.user
+    ? Boolean(
+        await prisma.favorite.findUnique({
+          where: { userId_listingId: { userId: session.user.id, listingId: id } },
+        }),
+      )
+    : false;
+
+  const reviewCount = listing.reviews.length;
+  const avgRating =
+    reviewCount > 0
+      ? listing.reviews.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+      : null;
+
   const listingJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: listing.title,
     description: listing.description,
     image: listing.photos.map((p) => p.url),
+    ...(avgRating !== null
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: avgRating.toFixed(1),
+            reviewCount,
+          },
+        }
+      : {}),
     offers: {
       "@type": "Offer",
       priceCurrency: "INR",
@@ -108,9 +136,27 @@ export default async function ListingDetailPage({
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-            {listing.title}
-          </h1>
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+              {listing.title}
+            </h1>
+            <FavoriteButton
+              listingId={listing.id}
+              initialFavorited={isFavorited}
+              isLoggedIn={!!session?.user}
+            />
+          </div>
+          {avgRating !== null && (
+            <p className="mt-1 flex items-center gap-1 text-sm">
+              <span className="text-amber-400">★</span>
+              <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                {avgRating.toFixed(1)}
+              </span>
+              <span className="text-neutral-500 dark:text-neutral-400">
+                ({reviewCount} review{reviewCount === 1 ? "" : "s"})
+              </span>
+            </p>
+          )}
           <p className="mt-1 text-neutral-500 dark:text-neutral-400">{listing.address}</p>
           {(listing.city || listing.pincode) && (
             <p className="mt-0.5 text-sm text-neutral-500 dark:text-neutral-400">
@@ -144,6 +190,37 @@ export default async function ListingDetailPage({
               {listing.description}
             </p>
           </div>
+
+          {listing.reviews.length > 0 && (
+            <div className="mt-6">
+              <h2 className="font-medium text-neutral-900 dark:text-neutral-100">
+                Reviews ({listing.reviews.length})
+              </h2>
+              <ul className="mt-3 space-y-3">
+                {listing.reviews.map((r) => (
+                  <li
+                    key={r.id}
+                    className="rounded-lg border border-neutral-200 p-3 text-sm dark:border-neutral-800"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-neutral-900 dark:text-neutral-100">
+                        {r.renter.name}
+                      </span>
+                      <span className="text-amber-400">
+                        {"★".repeat(r.rating)}
+                        <span className="text-neutral-300 dark:text-neutral-700">
+                          {"★".repeat(5 - r.rating)}
+                        </span>
+                      </span>
+                    </div>
+                    {r.comment && (
+                      <p className="mt-1 text-neutral-600 dark:text-neutral-400">{r.comment}</p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="mt-6 h-56 overflow-hidden rounded-lg sm:h-64">
             <MapView
